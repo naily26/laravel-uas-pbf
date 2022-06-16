@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
-class peminjamanController extends Controller
+use Carbon\Carbon;
+class PeminjamanController extends Controller
 {
 
     private $database;
@@ -16,18 +17,23 @@ class peminjamanController extends Controller
        $data = $this->database->getReference('peminjaman')->getValue();
        $arr = [];
         if($transaksi != null){
+            $no = 0;
             foreach ($transaksi as $tr => $trItem) {
                 $barang = $this->detailBarang($trItem['barang_id']);
                 $trId = $trItem['id'];
+                $arr[$no]['id'] = $trId;
                 if($barang != null || !is_null($barang))
                 {
-                    $arr[$trId]['nama_barang'] = $barang['name'];
+                    $arr[$no]['nama_barang'] = $barang['name'];
                 }else{
-                    $arr[$trId]['nama_barang'] = 'Data was deleted!';
+                    $arr[$no]['nama_barang'] = 'Data was deleted!';
                 }
 
-                 $arr[$trId]['start_date'] = $trItem['start_date']; 
-                 $arr[$trId]['end_date'] = $trItem['end_date']; 
+                 $arr[$no]['start_date'] = $trItem['start_date']; 
+                 $arr[$no]['end_date'] = $trItem['end_date']; 
+                 $arr[$no]['grandtotal'] = $trItem['grandtotal']; 
+                 $arr[$no]['hari'] = $trItem['hari']; 
+                 $no++;
             }
         }
         if($data != null){
@@ -64,16 +70,22 @@ class peminjamanController extends Controller
         }
 
         $unique = strtotime(date('Y-m-d H:i:s'));
-        
+        $end = strtotime($request->start_date); // or your date as well
+        $start = strtotime($request->end_date);
+        $datediff = $end - $start;
+
+        $hari = floor($datediff / (60 * 60 * 24));
+        $grandtotal = $hari * $request->grandtotal;
         $this->database
         ->getReference('peminjaman/' . $unique)
         ->set([
             'id'=>$unique,
-            'email' => $request->email,
+            'user_id' => $request->user_id,
             'barang_id'=>$request->barang_id,
             'start_date'=>$request->start_date,
             'end_date' => $request->end_date,
-            'grandtotal'=>$request->grandtotal,
+            'grandtotal'=> $grandtotal,
+            'hari'=>$hari,
             'status'=>'belum',
         ]);
 
@@ -102,6 +114,32 @@ class peminjamanController extends Controller
         ->getReference('peminjaman/' . $id)
         ->update([
             'status' => 'sudah',
+        ]);
+
+        return response()->json(
+                [
+                     "status" => "success"
+                    , "success" =>true
+                    , "message" => 'peminjamans has been updated']
+                );
+    }
+
+    public function update(Request $request){
+        $end = strtotime($request->start_date); // or your date as well
+        $start = strtotime($request->end_date);
+        $datediff = $end - $start;
+
+        $hari = floor($datediff / (60 * 60 * 24));
+        $grandtotal = $hari * $request->grandtotal;
+        $this->database
+        ->getReference('peminjaman/' . $request->id)
+        ->update([
+            'user_id' => $request->user_id,
+            'barang_id'=>$request->barang_id,
+            'start_date'=>$request->start_date,
+            'end_date' => $request->end_date,
+            'grandtotal'=>$grandtotal,
+            'hari'=>$hari,
         ]);
 
         return response()->json(

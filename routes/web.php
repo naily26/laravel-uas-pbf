@@ -1,10 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-// use App\Http\Controllers\GudangController;
+use App\Http\Controllers\PeminjamanController;
 use App\Http\Controllers\BarangController;
-// use App\Http\Controllers\UserController;
-// use App\Http\Controllers\TransaksiController;
+use App\Http\Controllers\PenggunaController;
+use App\Http\Controllers\TransaksiController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -21,11 +21,11 @@ Route::get('/', function () {
 });
 
 //Route Gudang
-// Route::post('/api/gudang_insert', [GudangController::class, 'insert']);
-// Route::get('/api/gudang_all', [GudangController::class, 'get']);
-// Route::get('/api/gudang_by_id/{id}', [GudangController::class, 'detail']);
-// Route::put('/api/gudang_update', [GudangController::class, 'update']);
-// Route::delete('/api/gudang_delete/{id}', [GudangController::class, 'delete']);
+Route::post('/api/gudang_insert', [PeminjamanController::class, 'insert']);
+Route::get('/api/gudang_all', [PeminjamanController::class, 'get']);
+Route::get('/api/gudang_by_id/{id}', [PeminjamanController::class, 'detail']);
+Route::post('/api/gudang_update', [PeminjamanController::class, 'update']);
+Route::delete('/api/gudang_delete/{id}', [PeminjamanController::class, 'delete']);
 
 //Route barang
 Route::post('/api/barang_insert', [BarangController::class, 'insert']);
@@ -34,13 +34,11 @@ Route::post('/api/barang_update', [BarangController::class, 'update']);
 Route::delete('/api/barang_delete/{id}', [BarangController::class, 'delete']);
 
 //Route User
-// Route::post('/api/user_insert', [UserController::class, 'insert']);
-// Route::post('/api/user_login', [UserController::class, 'loginApps']);
-// Route::get('/api/user_all', [UserController::class, 'get']);
-// Route::get('/api/user_by_id/{id}', [UserController::class, 'detail']);
-// Route::put('/api/user_update', [UserController::class, 'update']);
-// Route::delete('/api/user_delete/{id}', [UserController::class, 'delete']);
+Route::post('/api/pengguna_insert', [PenggunaController::class, 'insert']);
+Route::get('/api/pengguna_all', [PenggunaController::class, 'get']);
+Route::post('/api/pengguna_update', [PenggunaController::class, 'update']);
+Route::delete('/api/pengguna_delete/{id}', [PenggunaController::class, 'delete']);
 
 //Route Transaksi
-// Route::post('/api/transaction_insert', [TransaksiController::class, 'insert']);
-// Route::get('/api/transaction_all', [TransaksiController::class, 'get']);
+Route::get('/api/trans_peminjaman_update_kembali/{id}', [PeminjamanController::class, 'updateKembali']);
+Route::get('/api/trans_peminjaman_all', [TransaksiController::class, 'get']);

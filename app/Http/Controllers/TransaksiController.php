@@ -14,37 +14,37 @@ class TransaksiController extends Controller
     }
 
     public function get(){
-        $transaksi = $this->database->getReference('transaksi')->getValue();
+        $transaksi = $this->database->getReference('peminjaman')->getValue();
        // $data = $this->database->getReference('gudang')->getValue();
         $arr = [];
         if($transaksi != null){
+            $no = 0;
             foreach ($transaksi as $tr => $trItem) {
-                $warehouse = $this->detailGudang($trItem['warehouse_id']);
-                $material = $this->detailMaterial($trItem['material_id']);
+                $barang = $this->detailMaterial($trItem['barang_id']);
                 $user = $this->detailUser($trItem['user_id']);
                 $trId = $trItem['id'];
-                if($material != null || !is_null($material))
+                $arr[$no]['id'] = $trId;
+                if($barang != null || !is_null($barang))
                 {
-                    $arr[$trId]['material_name'] = $material['name'];
+                    $arr[$trId]['nama_barang'] = $barang['name'];
                 }else{
-                    $arr[$trId]['material_name'] = 'Data was deleted!';
+                    $arr[$trId]['nama_barang'] = 'Data was deleted!';
                 }
 
-                if($warehouse != null || !is_null($warehouse))
-                {
-                    $arr[$trId]['warehouse_name'] = $warehouse['name'];
-                }else{
-                    $arr[$trId]['warehouse_name'] = 'Data was deleted!';
-                }
 
                 if($user != null || !is_null($user))
                 {
-                    $arr[$trId]['user_name'] = $user['name'];
+                    $arr[$trId]['nama_pengguna'] = $user['name'];
                 }else{
-                    $arr[$trId]['user_name'] = 'Data was deleted!';
+                    $arr[$trId]['nama_pengguna'] = 'Data was deleted!';
                 }
 
                  $arr[$trId]['date_transaction'] = $trItem['date_transaction']; 
+                 $arr[$no]['start_date'] = $trItem['start_date']; 
+                 $arr[$no]['end_date'] = $trItem['end_date']; 
+                 $arr[$no]['grandtotal'] = $trItem['grandtotal']; 
+                 $arr[$no]['hari'] = $trItem['hari']; 
+                 $no++;
             }
         }
        if($transaksi != null){
@@ -65,64 +65,10 @@ class TransaksiController extends Controller
     }
 
 
-    public function insert(Request $request)
-    {
-        $warehouse = $this->detailGudang($request->warehouse_id);
-        $transaksi = $this->detailTransaksi();
-        $maxStok = $request->qty;
-        if($transaksi != null){
-            foreach ($transaksi as $key => $value) {
-                if($request->warehouse_id == $value['warehouse_id']){
-                    $maxStok += $value['qty'];
-                }
-            }
-        }
-
-
-        if($maxStok > $warehouse['max_capacity']){
-            return response()->json(
-                [
-                    "status" => "failed"
-                    , "success" =>false
-                    , "message" => "Warehouse quota full maximum"]
-                );
-        }
-
-        $unique = strtotime(date('Y-m-d H:i:s'));
-        $this->database
-        ->getReference('transaksi/' . $unique)
-        ->set([
-            'id'=>$unique,
-            'user_id' => $request->user_id,
-            'material_id' => $request->material_id,
-            'warehouse_id' => $request->warehouse_id,
-            'qty' => $request->qty,
-            'date_transaction'=>Carbon::now()->format('Y-m-d')
-        ]);
-        $material = $this->detailMaterial($request->material_id);
-        $fixStok = $material['stock'] + $request->qty;
-         $this->database
-        ->getReference('material/' . $material['id'])
-        ->update([
-            'stock'=>$fixStok
-        ]);
-        return response()->json(
-                [
-                     "status" => "success"
-                    , "success" =>true
-                    , "message" => 'transaction has been added']
-                );
-    }
-
-    public function detailGudang($id)
-    {
-        $data = $this->database->getReference('gudang')->getValue();
-        return $data[$id];
-    }
 
     public function detailMaterial($id)
     {
-        $data = $this->database->getReference('material')->getValue();
+        $data = $this->database->getReference('barang')->getValue();
         return $data[$id];
     }
 
@@ -132,10 +78,5 @@ class TransaksiController extends Controller
         return $data[$id];
     }
 
-    public function detailTransaksi()
-    {
-        $data = $this->database->getReference('transaksi')->getValue();
-        return $data;
-    }
 
 }
