@@ -17,14 +17,16 @@ class PenggunaController extends Controller
        $data = $this->database->getReference('pengguna')->getValue();
        $arr = [];
        $no = 0;
-       foreach($data as $key => $item)
-       {
-            $arr[$no]['id'] = $item['id'];
-            $arr[$no]['name'] = $item['name'];
-            $arr[$no]['no_hp'] = $item['no_hp'];
-            $arr[$no]['alamat_pengguna'] = $item['alamat_pengguna'];
-            $no++;
-       }
+       if($data != null){
+           foreach($data as $key => $item)
+           {
+                $arr[$no]['id'] = $item['id'];
+                $arr[$no]['name'] = $item['name'];
+                $arr[$no]['no_hp'] = $item['no_hp'];
+                $arr[$no]['alamat_pengguna'] = $item['alamat_pengguna'];
+                $no++;
+           }
+        }
         if($data != null){
             return response()->json(
                 [

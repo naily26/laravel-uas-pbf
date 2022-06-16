@@ -16,15 +16,17 @@ class BarangController extends Controller
     public function get(){
        $data = $this->database->getReference('barang')->getValue();
        $arr = [];
+       if($data != null){
        $no = 0;
-       foreach($data as $key => $item)
-       {
-            $arr[$no]['id'] = $item['id'];
-            $arr[$no]['name'] = $item['name'];
-            $arr[$no]['stock'] = $item['stock'];
-            $arr[$no]['harga_barang'] = $item['harga_barang'];
-            $no++;
-       }
+           foreach($data as $key => $item)
+           {
+                $arr[$no]['id'] = $item['id'];
+                $arr[$no]['name'] = $item['name'];
+                $arr[$no]['stock'] = $item['stock'];
+                $arr[$no]['harga_barang'] = $item['harga_barang'];
+                $no++;
+           }
+        }
         if($data != null){
             return response()->json(
                 [

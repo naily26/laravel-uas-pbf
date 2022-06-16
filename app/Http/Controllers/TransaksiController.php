@@ -69,12 +69,20 @@ class TransaksiController extends Controller
     public function detailMaterial($id)
     {
         $data = $this->database->getReference('barang')->getValue();
+        if(!isset($data[$id]))
+        {
+            return null;
+        }
         return $data[$id];
     }
 
     public function detailUser($id)
     {
         $data = $this->database->getReference('user')->getValue();
+        if(!isset($data[$id]))
+        {
+            return null;
+        }
         return $data[$id];
     }
 
