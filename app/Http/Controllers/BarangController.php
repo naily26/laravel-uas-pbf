@@ -23,6 +23,7 @@ class BarangController extends Controller
             $arr[$no]['name'] = $item['name'];
             $arr[$no]['stock'] = $item['stock'];
             $arr[$no]['harga_barang'] = $item['harga_barang'];
+            $no++;
        }
         if($data != null){
             return response()->json(
@@ -64,10 +65,8 @@ class BarangController extends Controller
         $this->database
         ->getReference('barang/' . $request->id)
         ->update([
-           // 'id_barang'=>$unique,
             'name' => $request->name,
-            //'stock'=>0,
-            'harga_barang' => $request->jenis_barang,
+            'harga_barang' => $request->harga_barang,
         ]);
 
         return response()->json(

@@ -30,7 +30,7 @@ Route::get('/', function () {
 //Route barang
 Route::post('/api/barang_insert', [BarangController::class, 'insert']);
 Route::get('/api/barang_all', [BarangController::class, 'get']);
-Route::put('/api/barang_update', [BarangController::class, 'update']);
+Route::post('/api/barang_update', [BarangController::class, 'update']);
 Route::delete('/api/barang_delete/{id}', [BarangController::class, 'delete']);
 
 //Route User
