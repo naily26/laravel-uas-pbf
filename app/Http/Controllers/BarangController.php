@@ -24,6 +24,7 @@ class BarangController extends Controller
                 $arr[$no]['name'] = $item['name'];
                 $arr[$no]['stock'] = $item['stock'];
                 $arr[$no]['harga_barang'] = $item['harga_barang'];
+                $arr[$no]['gambar'] = $item['gambar'];
                 $no++;
            }
         }
@@ -54,6 +55,7 @@ class BarangController extends Controller
             'name' => $request->name,
             'stock'=> $request->stock,
             'harga_barang' => $request->harga_barang,
+            'gambar' => $request->gambar,
         ]);
         return response()->json(
                 [
@@ -68,6 +70,7 @@ class BarangController extends Controller
         ->getReference('barang/' . $request->id)
         ->update([
             'name' => $request->name,
+            'harga_barang' => $request->harga_barang,
             'harga_barang' => $request->harga_barang,
         ]);
 

@@ -76,15 +76,16 @@ class PeminjamanController extends Controller
                         , "message" => "peminjaman gagal id barang tidak ditemukan!"]
                     );
         }
-        $user = $this->detailUser($request->user_id);
-         if($user == null){
-           return response()->json(
-                    [
-                        "status" => "failed"
-                        , "success" =>false
-                        , "message" => "peminjaman gagal id peminjam tidak ditemukan!"]
-                    );
-        }
+        // $user = $this->detailUser($request->user_id);
+        //  if($user == null){
+        //    return response()->json(
+        //             [
+        //                 "status" => "failed"
+        //                 , "success" =>false
+        //                 , "message" => "peminjaman gagal id peminjam tidak ditemukan!"]
+        //             );
+        // }
+        $user = $request->user_id;
         $unique = strtotime(date('Y-m-d H:i:s'));
         $start = strtotime($request->start_date); // or your date as well
         $end = strtotime($request->end_date);
